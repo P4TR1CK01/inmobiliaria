@@ -1,0 +1,14 @@
+apluggy==1.0.1
+asgiref==3.8.1
+decorator==5.1.1
+Django==5.0.6
+exceptiongroup==1.2.1
+nextline==0.7.13
+pluggy==1.5.0
+psycopg2==2.9.9
+six==1.16.0
+sqlparse==0.5.0
+transitions==0.9.1
+types-decorator==5.1.8.20240310
+tzdata==2024.1
+(amb_django) 
