@@ -9,9 +9,9 @@ class User(models.Model):
   direccion = models.CharField(max_length=100)
   telefono_personal = models.CharField(max_length=20)
   correo_electronico = models.EmailField(unique=True)
-  tipo_usuario = models.CharField(max_length=10, choices=[('arrendatario', 'Arrendatario'), ('arrendador,' 'Arrendador')])
+  tipo_usuario = models.CharField(max_length=100, choices=[('arrendatario', 'Arrendatario'), ('arrendador', 'Arrendador')])
 
-class Inmueble(moels.Model):
+class Inmueble(models.Model):
   nombre = models.CharField(max_length=50)
   descripcion = models.TextField()
   m2_construidos = models.IntegerField()
@@ -21,7 +21,7 @@ class Inmueble(moels.Model):
   baños = models.IntegerField()
   direccion = models.CharField(max_length=100)
   comuna = models.CharField(max_length=50)
-  tipo_inmueble = models.CharField(max_length=10, choices=[('casa', 'Casa'), ('departamento', 'Departamento'), ('parcela', 'Parcela')])
+  tipo_inmueble = models.CharField(max_length=100, choices=[('casa', 'Casa'), ('departamento', 'Departamento'), ('parcela', 'Parcela')])
   precio_mensual_arriendo = models.DecimalField(max_digits=10, decimal_places=2)
 
 class SolicitudArriendo(models.Model):
