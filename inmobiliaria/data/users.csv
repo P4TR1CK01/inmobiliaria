@@ -1,0 +1,11 @@
+username;first_name;last_name;email;password;password_confirm;direccion
+11.111.111-1;"Homer";"Simpson";"h.simpson@mail.com";"1234";"1234";"742 Evergreen Terrace"
+22.222.222-2;"Marge";"Simpson";"m.simpson@mail.com";"1234";"1234";"742 Evergreen Terrace"
+33.333.333-3;"Bart";"Simpson";"b.simpson@mail.com";"1234";"1234";"Springfield Elementary School"
+44.444.444-4;"Lisa";"Simpson";"l.simpson@mail.com";"1234";"1234";"742 Evergreen Terrace"
+55.555.555-5;"Maggie";"Simpson";"maggie.simpson@mail.com";"1234";"1234";"742 Evergreen Terrace"
+66.666.666-6;"Ned";"Flanders";"ned.flanders@mail.com";"1234";"1234";"744 Evergreen Terrace"
+77.777.777-7;"Moe";"Szyslak";"moe.szyslak@mail.com";"1234";"1234";"Moe's Tavern"
+88.888.888-8;"Apu";"Nahasapeemapetilon";"apu.nahasapeemapetilon@mail.com";"1234";"1234";"Kwik-E-Mart"
+99.999.999-9;"Barney";"Gumble";"barney.gumble@mail.com";"1234";"1234";"Moe's Tavern"
+10.000.000-0;"Lenny";"Leonard";"lenny.leonard@mail.com";"1234";"1234";"742 Evergreen Terrace"
