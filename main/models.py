@@ -21,6 +21,9 @@ class Region(models.Model):
   cod = models.CharField(max_length=5, primary_key=True)
   nombre = models.CharField(max_length=255)
 
+  def __str__(self) -> str:
+    return f'{self.nombre} admin({self.cod})'
+
 class Comuna(models.Model): 
   cod = models.CharField(max_length=5, primary_key=True)
   nombre = models.CharField(max_length=255)
@@ -31,7 +34,7 @@ class Comuna(models.Model):
   )
   def __str__(self):
     nombre = self.nombre
-    return f'{nombre}'
+    return f'{nombre} ({self.cod})'
   
 class Inmueble(models.Model):
   inmuebles = (
@@ -64,7 +67,8 @@ class Inmueble(models.Model):
   def __str__(self):
     nombre = self.nombre
     comuna = self.comuna
-    return f' {nombre}, {comuna} | {tipo_inmueble}'
+    tipo_inmueble = self.tipo_de_inmueble
+    return f' {nombre}, {comuna}, {tipo_inmueble}'
   
 class Solicitud(models.Model):
   estados = (
