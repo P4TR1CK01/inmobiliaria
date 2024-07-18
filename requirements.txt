@@ -11,4 +11,4 @@ sqlparse==0.5.0
 transitions==0.9.1
 types-decorator==5.1.8.20240310
 tzdata==2024.1
-(amb_django) 
+(amb_django)==environment

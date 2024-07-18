@@ -11,3 +11,6 @@ class Command(BaseCommand):
     #eliminar_inmueble(1)
     #editar_inmueble(3, 'Parcela Amarilla en Villa Alemana', 'Hermosa parcela amarilla en la esquina', 90, 180, 3, 3, 2, 'Calle 22', 750000, 'parcela', 'Villa Alemana', '22.2222.222-2')
     return 'Funciona correctamente'
+  
+    inmuebles = obtener_inmuebles_comunas()
+    import pdb; pdb.set_trace()
