@@ -9,7 +9,19 @@ def crear_inmueble(nombre, descripcion, m2_construidos, m2_totales, num_estacion
   comuna = Comuna.objects.get(cod=comuna_cod)
   propietario = User.objects.get(username=propietario_rut)
 
-  Inmueble.objects.create(nombre=nombre, descripcion=descripcion, m2_construidos=m2_construidos, m2_totales=m2_totales, num_estacionamientos=num_estacionamientos, num_habitaciones=num_habitaciones, num_baños=num_baños, direccion=direccion, tipo_inmueble=tipo_inmueble, precio=precio, comuna=comuna, propietario=propietario)
+  Inmueble.objects.create(nombre=nombre,
+  descripcion=descripcion,
+  m2_construidos=m2_construidos,
+  m2_totales=m2_totales,
+  num_estacionamientos=num_estacionamientos,
+  num_habitaciones=num_habitaciones,
+  num_baños=num_baños,
+  direccion=direccion,
+  tipo_inmueble=tipo_inmueble,
+  precio=precio,
+  comuna=comuna,
+  propietario=propietario
+  )
 
 def editar_inmueble(*args):
   pass
@@ -46,7 +58,7 @@ def editar_user(username, first_name, last_name, email, password, direccion, tel
   user_profile.telefono = telefono
   user_profile.save()
 
-def editar_user_sin_password(username, first_name, last_name, email, direccion, telefono=None) -> list[bool, str]:
+def editar_user_sin_password(username, first_name, last_name, email, direccion, rol,  telefono=None) -> list[bool, str]:
   # 1. Nos traemos el 'user' y modificamos sus datos
   user = User.objects.get(username=username)
   user.first_name = first_name
@@ -57,6 +69,8 @@ def editar_user_sin_password(username, first_name, last_name, email, direccion, 
   user_profile = UserProfile.objects.get(user=user)
   user_profile.direccion = direccion
   user_profile.telefono = telefono
+  user_profile.rol = rol
+
   user_profile.save()
 
 def eliminar_user(user_id):

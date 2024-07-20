@@ -4,6 +4,33 @@
   <div class="row">
     <div class="col-3">
       <h3 class="text-center">Cambia tu contraseña</h3>
+      <form action="/accounts/change-pass" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="password" class="form-label">Contraseña</label>
+          <input 
+            type="password" 
+            class="form-control" 
+            name="password"
+            id="password"
+            placeholder="*****"
+            required
+            >
+        </div>
+        
+        <div class="mb-3">
+          <label for="pass_repeat" class="form-label">Repita la contraseña</label>
+          <input 
+            type="password"
+            class="form-control"
+            name="pass_repeat"
+            id="pass_repeat"
+            placeholder="*****"
+            required
+          >
+        </div>
+        <input type="submit" value="Cambiar" class="btn btn-danger">
+      </form>
     </div>
     <div class="col-5">
       <h3 class="text-center">Editar datos personales</h3>
@@ -67,6 +94,37 @@
             placeholder="tu teléfono"
             value="{% if user.user_profile.telefono %}{{user.user_profile.telefono}}{% endif %}"
           />
+          <div class="mb-3">
+            <!-- <b>{{user.user_profile.rol}}</b> -->
+            <div class="form-check form-check-inline">
+              <input 
+                class="form-check-input" 
+                type="radio" 
+                name="rol" 
+                id="arrendador"
+                value="arrendador"
+                required
+                {% if user.user_profile.rol == 'arrendador'%}
+                  checked
+                {% endif %}
+              />
+              <label class="form-check-label" for="arrendador">Arrendador</label>
+            <div class="form-check form-check-inline">
+                <input 
+                  class="form-check-input" 
+                  type="radio" 
+                  name="rol" 
+                  id="arrendatario"
+                  value="arrendatario"
+                  required
+                  {% if user.user_profile.rol == 'arrendatario'%}
+                    checked
+                  {% endif %}
+                />
+                <label class="form-check-label" for="arrendatario">Arrendatario</label>
+            </div>
+          </div>
+          
         </div>
         
         <input type="submit" value="Enviar" class="btn btn-outline-success">
