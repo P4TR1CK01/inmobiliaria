@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
+from django import forms
 
 # Create your models here.
 
@@ -39,10 +40,12 @@ class Comuna(models.Model):
   
 class Inmueble(models.Model):
   inmuebles = (
+    ('bodega', 'Bodega'),
     ('casa', 'Casa'),
     ('departamento', 'Departamento'),
     ('parcela', 'Parcela')
   )
+  
   nombre = models.CharField(max_length=50)
   descripcion = models.TextField(max_length=1500)
   m2_construidos = models.IntegerField(validators=[MinValueValidator(1)])

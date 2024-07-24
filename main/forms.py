@@ -9,7 +9,12 @@ class UserForm(forms.ModelForm):
 class InmuebleForm(forms.ModelForm):
   class Meta:
     model = Inmueble
-    fields = ('nombre', 'descripcion', 'm2_construidos', 'm2_totales', 'estacionamientos', 'habitaciones', 'banos', 'direccion', 'comuna', 'tipo_inmueble', 'precio_mensual_arriendo')
+    exclude = []
+    # widgets = {
+    #   'nombre': forms.TextInput(attrs={'class': 'form-control'}),
+    #   'descripcion: forms.Textarea(attrs={'class': 'form-control'}),
+    # # }
+    #fields = ('nombre', 'descripcion', 'm2_construidos', 'm2_totales', 'estacionamientos', 'habitaciones', 'banos', 'direccion', 'comuna', 'tipo_inmueble', 'precio_mensual_arriendo')
 
 class SolicitudArriendoForm(forms.ModelForm):
   class Meta:

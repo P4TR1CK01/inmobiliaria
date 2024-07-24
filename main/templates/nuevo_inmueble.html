@@ -9,44 +9,44 @@
       <div class="col-4 p-3">
 
         <div class="mb-3">
-          <label for="nombre" class="form-label">Nombre:</label>
+          <label for="nombre" class="form-label">Nombre</label>
           <input type="text" class="form-control" id="nombre" required placeholder="nombre de la propiedad" name="nombre">
         </div>
 
         <div class="mb3">
-          <label for="descripcion" class="form-label">Descripción:</label>
+          <label for="descripcion" class="form-label">Descripción</label>
           <textarea class="form-control" id="descripcion" rows="3" required maxlength="1500" placeholder="Breve descripcion..."></textarea>
         </div>
         
         <div class="mb-3">
-          <label for="nombre" class="form-label">Metros Construídos:</label>
+          <label for="nombre" class="form-label">Metros Construídos</label>
           <input min="1" name="m2_construidos" type="number" class="form-control" id="m2_construidos" required placeholder="23 m^2">
         </div>
 
         <div class="mb-3">
-          <label for="nombre" class="form-label">Metros Totales:</label>
+          <label for="nombre" class="form-label">Metros Totales</label>
           <input min="1" name="m2_totales" type="number" class="form-control" id="m2_totales" required placeholder="50 m^2">
         </div>
       </div>
 
       <div class="col-4 p-3">
         <div class="mb-3">
-          <label for="nombre" class="form-label">Num. Estacionamientos:</label>
+          <label for="nombre" class="form-label">Num. Estacionamientos</label>
           <input min="0" value="0"  name="num_estacionamientos" type="number" class="form-control" id="num_estacionamientos" required placeholder="num">
         </div>
 
         <div class="mb-3">
-          <label for="nombre" class="form-label">Num. Habitaciones:</label>
+          <label for="nombre" class="form-label">Num. Habitaciones</label>
           <input min="0" value="0"  name="num_haitaciones" type="number" class="form-control" id="num_habitaciones" required placeholder="num">
         </div>
 
         <div class="mb-3">
-          <label for="nombre" class="form-label">Num. Baños:</label>
+          <label for="nombre" class="form-label">Num. Baños</label>
           <input min="0" value="0"  name="num_baños" type="number" class="form-control" id="num_baños" required placeholder="num">
         </div>
 
         <div class="mb-3">
-          <label for="nombre" class="form-label">Direccion:</label>
+          <label for="nombre" class="form-label">Direccion</label>
           <input type="text" class="form-control" id="direccion" required placeholder="tú direccion" name="direccion">
         </div>
       </div>
@@ -54,7 +54,7 @@
       <div class="col-4 p-3">  
         <div class="mb-3">
           <select class="form-select" required name="tipo_inmueble">
-            <option value>Selecciona un tipo:</option>
+            <option value>Selecciona un tipo</option>
             {% for tipo in tipos_inmueble %}
               <option value="{{ tipo.0 }}">{{ tipo.1 }}</option>
             {% endfor %}
@@ -68,7 +68,7 @@
 
         <div class="mb-3">
           <select class="form-select" required name="region_cod" id="region_cod">
-            <option value>Selecciona una Región:</option>
+            <option value>Selecciona una Región</option>
             {% for region in regiones %}
               <option value="{{ region.cod }}">{{ region.nombre }}</option>
             {% endfor %}
@@ -77,7 +77,7 @@
 
         <div class="mb-3">
           <select class="form-select" required name="comuna_cod" id="comuna_cod">
-            <option value>Selecciona una Comuna:</option>
+            <option value>Selecciona una Comuna</option>
             {% for comuna in comunas %}
               <option value="{{ comuna.cod }}">{{ comuna.nombre }}</option>
             {% endfor %}
