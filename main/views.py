@@ -15,9 +15,41 @@ def calcular_clase(tipo_mensaje):
     return 'danger'
   return tipo_mensaje
 
+def filtrar_inmuebles(region_cod, comuna_cod, palabra):
+  #Caso 1 : comuna_cod != ''abs
+  #Caso 2: comuna_cod == '' and region_cod != ''
+  #Caso 3: comuna_cod == '' and region_cod == ''
+  if comuna_cod != '':
+    comuna = Comuna.objects.get(cod = comuna_cod)
+    return Inmueble.objects.filter(comuna = comuna)
+  
+  elif comuna_cod == '' and region_cod != '':
+    region = Region.objects.get(cod = region_cod)
+    comunas = Comuna.objects.filter(region = region)
+    return Inmueble.objects.filter(comuna__in = comunas, nombre__icontains = palabra)
+  
+  else:
+    return Inmueble.objects.filter(nombre__icontains = palabra)
+  
+  inmuebles = Inmueble.objects.all()
+  return inmuebles
+
 @login_required
 def home(req):
-  return render(req, 'home.html')
+  datos = req.GET
+  region_cod = datos.get('region_cod', '')
+  comuna_cod = datos.get('comuna_cod', '')
+  palabra = datos.get('palabra', '')
+  inmuebles = filtrar_inmuebles
+  comunas = Comuna.objects.all()
+  regiones = Region.objects.all()
+  
+  context = {
+    'comunas': comunas, 
+    'regiones': regiones,
+    'inmuebles': inmuebles
+  }
+  return render(req, 'home.html', context)
 
 @login_required
 def profile(req):
