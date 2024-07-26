@@ -1,60 +1,55 @@
 <nav class="navbar navbar-expand-lg bg-dark " data-bs-theme="dark">
   <div class="container">
-
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
       aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span>Inmobiliaria Pelusa</span>
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-
       <ul class="navbar-nav ms-auto mb-2">
-
         <li class="nav-item">
           <a class="nav-link active-nav" aria-current="page" href="/">Inicio</a>
         </li>
-
         <li class="nav-item">
           <a class="nav-link" href="{% url 'register' %}">Regístrate</a>
         </li>
-        
         <li class="nav-item">
           <a class="nav-link" href="{% url 'login' %}">Ingresar</a>
         </li>
-
         {% if user.is_authenticated %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'profile' %}">Mis Datos</a>
         </li>
         {% endif %}
-
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle boton-inmueble" href="/" role="button"
-            data-bs-toggle="dropdown" aria-expanded="false">inmuebles</a>
+          <a class="nav-link dropdown-toggle boton-inmueble" href="/" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">inmuebles</a>
           <ul class="dropdown-menu">
             {% if user.is_authenticated %}
-              <li><a class="dropdown-item" href="/inmuebles/nuevo_inmueble/">Nuevo inmueble</a></li>
-              <!-- <li><a class="dropdown-item" href="/inmuebles/editar/">Editar inmueble</a></li> -->
+            <li><a class="dropdown-item" href="/inmuebles/nuevo_inmueble/">Nuevo inmueble</a></li>
+            <!-- <li><a class="dropdown-item" href="/inmuebles/editar/">Editar inmueble</a></li> -->
             {% endif %}
-
           </ul>
-
-
+        </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle boton-arriendo" href="/" role="button"
-            data-bs-toggle="dropdown" aria-expanded="false">Tipo de propiedad</a>
+          <a class="nav-link dropdown-toggle boton-arriendo" href="/" role="button" data-bs-toggle="dropdown"
+            aria-expanded="false">Tipo de propiedad</a>
           <ul class="dropdown-menu">
             <li><a class="dropdown-item" href="/inmuebles/bodegas/">Bodegas</a></li>
             <li><a class="dropdown-item" href="/inmuebles/casas/">Casas</a></li>
             <li><a class="dropdown-item" href="/inmuebles/departamentos/">Departametos</a></li>
             <li><a class="dropdown-item" href="/inmuebles/parcelas/">Parcelas</a></li>
           </ul>
-
+        </li>
           {% if user.user_profile.rol == 'arrendador' or user.is_admin %}
         <li class="nav-item">
           <a class="nav-link" href="{% url 'nuevo_inmueble' %}">Agregar nuevo inmueble</a>
         </li>
         {% endif %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'about' %}">Nosotros</a>
+        </li>
     </div>
   </div>
 </nav>

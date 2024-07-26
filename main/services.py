@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from main.models import UserProfile, Inmueble, Comuna
+from main.models import UserProfile, Inmueble, Comuna, Region
 from django.db.utils import IntegrityError
 from django.core.exceptions import ValidationError
 from django.contrib import messages
@@ -49,8 +49,7 @@ def crear_user(username, first_name, last_name, email, password, pass_confirm, d
   if password != pass_confirm:
     messages.error(req, 'Las contraseñas no coinciden')
     return False
-  
-  # 2. creamos el objeto user
+  # Creamos el objeto user
   try:
     user = User.objects.create_user(
       username, 
@@ -60,55 +59,55 @@ def crear_user(username, first_name, last_name, email, password, pass_confirm, d
       last_name = last_name
     )
   except IntegrityError:
-    # se le da feedback al usuario
+    # Se le da feedback al usuario
     messages.error(req, 'Este RUT ya está en uso, porfavor ingrese otro') 
     return False
   except ValidationError:
     messages.error(req, 'Este E-mail ya está en uso, porafvor ingrese otro')
     return False
     
-  # 3. Creamos el UserProfile
+  # Creamos el UserProfile
   UserProfile.objects.create(
     user = user, 
     direccion = direccion, 
     telefono = telefono,
     rol = rol)
-  # 4. Si todo sale bien, retornamos True
+  # Si todo sale bien, retornamos True
   messages.success(req, 'Su usuario ha sido creado')
   return True, None
 
 def editar_user(username, first_name, last_name, email, password, direccion, telefono=None):
-  # 1. Nos traemos el 'user' y modificamos sus datos
+  # Nos traemos el 'user' y modificamos sus datos
   user = User.objects.get(username=username)
   user.first_name = first_name
   user.last_name = last_name
   user.email = email
   user.set_password(password)
   user.save()
-  # 2. Nos traemos el 'user_profile' y modificamos sus datos
+  # Nos traemos el 'user_profile' y modificamos sus datos
   user_profile = UserProfile.objects.get(user=user)
   user_profile.direccion = direccion
   user_profile.telefono = telefono
   user_profile.save()
 
 def editar_user_sin_password(username, first_name, last_name, email, direccion, rol,  telefono=None):
-  # 1. Nos traemos el 'user' y modificamos sus datos
+  # Nos traemos el 'user' y modificamos sus datos
   user = User.objects.get(username=username)
   user.first_name = first_name
   user.last_name = last_name
   user.email = email
   user.save()
-  # 2. Nos traemos el 'user_profile' y modificamos sus datos
+  # Nos traemos el 'user_profile' y modificamos sus datos
   user_profile = UserProfile.objects.get(user=user)
   user_profile.direccion = direccion
   user_profile.telefono = telefono
   user_profile.rol = rol
   user_profile.save()
-
+  
 def eliminar_user(rut):
   eliminar = User.objects.get(Usernname = rut)
   eliminar.delete()
-
+  
 def cambiar_contraseña(req, password, repeat_password):
   if password != repeat_password:
     messages.error(req, 'Las contraseñas no coinciden')
@@ -116,7 +115,6 @@ def cambiar_contraseña(req, password, repeat_password):
   request.user.set_password(password)
   request.user.save()
   messages.success(req, 'Contraseña actualizaca correctamente')
-  
   
 def obtener_inmuebles_comunas(filtro):
   if filtro is None:
@@ -132,7 +130,7 @@ def obtener_inmuebles_region(filtro):
     join main_region as R on C.region_id = R.cod
     order by R.cod;
   '''
-  cursor =connection.cursor()
+  cursor = connection.cursor()
   cursor.execute(consulta)
   registros = cursor.fetchall() # LAZY LOADING
   return registros

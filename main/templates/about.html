@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
 <div class="container">
@@ -13,8 +14,7 @@
         para hacer realidad los sueños de nuestros clientes.</p>
     </div>
     <div class="col-6">
-      <img src="https://a.cdn-hotels.com/gdcs/production0/d904/1a2db549-b49d-4845-aa19-c9d72f4266c2.jpg"
-        class="img-fluid" alt="Cena en Paris">
+      <img src="{% static 'img/vecindario.jpeg' %}" class="img-fluid" alt="Cena en Paris">
     </div>
   </div>
 </div>

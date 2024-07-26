@@ -1,0 +1,52 @@
+/* Estilos CSS
+============== */
+
+/* Estilos background */
+body {
+  background-image: linear-gradient(to right, steelblue, mediumaquamarine) !important; /* Degradado */
+  transition: background-color 1s; /* Transición suave */
+  font-family: "Bebas Neue", sans-serif;
+  scroll-behavior: smooth;
+  min-width: 1rem;
+} 
+
+/* Estilos logo */
+.main-logo {
+  max-width: 100% !important;
+}
+
+/* Estilos Navbar */
+nav a:hover {
+  color: rebeccapurple !important;
+}
+
+/* Estilos footer */
+footer {
+  align-items: flex-end;
+  background-color: LightGray;
+  line-height: 2;
+}
+
+.container-credit {
+  overflow: hidden;
+  white-space: nowrap; /* Asegura que los elementos se alineen horizontalmente */
+}
+
+.scrolling {
+  display: inline-block;
+  animation: scrollCredits 20s linear infinite;
+}
+
+@keyframes scrollCredits {
+  0% {
+      transform: translateX(100%);
+  }
+  100% {
+      transform: translateX(-100%);
+  }
+}
+
+.item {
+  display: inline-bloc; 
+  margin-right: 50px; 
+}
