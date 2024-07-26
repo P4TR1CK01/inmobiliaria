@@ -27,11 +27,9 @@ urlpatterns = [
     path('inmuebles/nuevo_inmueble/', nuevo_inmueble, name='nuevo_inmueble'),
     path('inmuebles/editar/<id>/', editar_inmueble, name='editar_inmueble'),
     path('inmuebles/eliminar/<id>/', eliminar_inmueble, name='eliminar_inmueble'),
-
     path('accounts/change-pass/', change_password, name='change_password'),
     path('edit-user/', edit_user, name='edit_user'),
     # Estas son parte de la clase de hoy, no del proyecto
     # path('arrendadores/', solo_arrendadores, name='solo_arrendadores'),
     # path('arrendatarios/', solo_arrendatarios, name='solo_arrendatarios'),
-
 ]

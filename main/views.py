@@ -7,53 +7,27 @@ from django.contrib.auth.decorators import user_passes_test
 from main.models import Inmueble, Region, Comuna
 from main.services import crear_inmueble as crear_inmueble_service, eliminar_inmueble as eliminar_inmueble_service
 #from inmueble.forms import InmuebleForm
-
+from django.db.models import Q
 # Create your views here.
+
+def register(req):
+  return render(req, 'register.html')
 
 def calcular_clase(tipo_mensaje):
   if tipo_mensaje == 'error':
     return 'danger'
   return tipo_mensaje
 
-def filtrar_inmuebles(region_cod, comuna_cod, palabra):
-  #Caso 1 : comuna_cod != ''abs
-  #Caso 2: comuna_cod == '' and region_cod != ''
-  #Caso 3: comuna_cod == '' and region_cod == ''
-  if comuna_cod != '':
-    comuna = Comuna.objects.get(cod = comuna_cod)
-    return Inmueble.objects.filter(comuna = comuna)
-  
-  elif comuna_cod == '' and region_cod != '':
-    region = Region.objects.get(cod = region_cod)
-    comunas = Comuna.objects.filter(region = region)
-    return Inmueble.objects.filter(comuna__in = comunas, nombre__icontains = palabra)
-  
-  else:
-    return Inmueble.objects.filter(nombre__icontains = palabra)
-  
-  inmuebles = Inmueble.objects.all()
-  return inmuebles
 
-@login_required
-def home(req):
-  datos = req.GET
-  region_cod = datos.get('region_cod', '')
-  comuna_cod = datos.get('comuna_cod', '')
-  palabra = datos.get('palabra', '')
-  inmuebles = filtrar_inmuebles
-  comunas = Comuna.objects.all()
-  regiones = Region.objects.all()
-  
-  context = {
-    'comunas': comunas, 
-    'regiones': regiones,
-    'inmuebles': inmuebles
-  }
-  return render(req, 'home.html', context)
 
 @login_required
 def profile(req):
-  return render(req, 'profile.html')
+  usuario = req.user
+  inmuebles = Inmueble.objects.filter(propietario = usuario)
+  context = {
+    'inmuebles': inmuebles
+  }
+  return render(req, 'profile.html', context)
 
 @login_required
 def edit_user(req):
@@ -96,8 +70,6 @@ def change_password(req):
   messages.success(req, "Contraseña actualizada")
   return redirect('/accounts/profile')
 
-def register(req):
-  return render(req, 'register.html')
 
 #vamos a crear un test que solo pasan los 'arrendadores'
 def solo_arrendadores(user):
@@ -106,8 +78,11 @@ def solo_arrendadores(user):
   else:
     return False
 
+
 def solo_arrendatarios(req):
   return HttpResponse('sólo arrendatarios')
+
+### Inmuebles -->
 
 @user_passes_test(solo_arrendadores)
 def nuevo_inmueble(req):
@@ -173,3 +148,67 @@ def eliminar_inmueble(req, id):
   eliminar_inmueble_service(id)
   messages.error(req, 'Inmueble ha sido eliminado')
   return redirect('/account/profile/')
+
+@login_required
+def home(req):
+  datos = req.GET
+  region_cod = datos.get('region_cod', '')
+  comuna_cod = datos.get('comuna_cod', '')
+  palabra = datos.get('palabra', '')
+  inmuebles = filtrar_inmuebles(region_cod, comuna_cod, palabra)
+  comunas = Comuna.objects.all()
+  regiones = Region.objects.all()
+  
+  context = {
+    'comunas': comunas, 
+    'regiones': regiones,
+    'inmuebles': inmuebles
+  }
+  return render(req, 'home.html', context)
+
+# Filtros -->
+
+def filtrar_inmuebles(region_cod, comuna_cod, palabra):
+  # # Caso 1 : comuna_cod != ''abs
+  # if comuna_cod != '':
+  #   comuna = Comuna.objects.get(cod = comuna_cod)
+  #   return Inmueble.objects.filter(comuna = comuna)
+  
+  # # Caso 2: comuna_cod == '' and region_cod != ''
+  # elif comuna_cod == '' and region_cod != '':
+  #   region = Region.objects.get(cod = region_cod)
+  #   comunas = Comuna.objects.filter(region = region)
+  #   return Inmueble.objects.filter(comuna__in = comunas, nombre__icontains = palabra)
+  
+  # # Caso 3: comuna_cod == '' and region_cod == ''
+  # else:
+  #   return Inmueble.objects.filter(nombre__icontains = palabra)
+  
+  # inmuebles = Inmueble.objects.all()
+  # return inmuebles
+  
+  # Caso 2
+  filtro_palabra = None 
+  if palabra != '':
+    filtro_palabra = Q(nombre__icontains=palabra) | Q(descripcion__icontains=palabra)
+  
+  filtro_ubicacion = None
+  if comuna_cod != '':
+    comuna = Comuna.objects.get(cod = comuna_cod)
+    filtro_ubicacion = Q(comuna=comuna)
+    
+  elif region_cod != '':
+    region = Region.objects.get(cod = region_cod)
+    comunas_region = region.comunas.all()
+    filtro_ubicacion = Q(comuna__in = comunas_region)
+  
+    # Caso 2.1-2-3
+  if filtro_ubicacion is None and filtro_palabra is None:
+    return Inmueble.objects.all()
+  elif filtro_ubicacion is not None and filtro_palabra is None:
+    return Inmueble.objects.filter(filtro_ubicacion)
+  elif filtro_ubicacion is None and filtro_palabra is not None:
+    return Inmueble.objects.filter(filtro_palabra)
+  elif filtro_ubicacion is not None and filtro_palabra is not None:
+    return Inmueble.objects.filter(filtro_palabra & filtro_ubicacion)
+  

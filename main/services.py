@@ -109,6 +109,15 @@ def eliminar_user(rut):
   eliminar = User.objects.get(Usernname = rut)
   eliminar.delete()
 
+def cambiar_contraseña(req, password, repeat_password):
+  if password != repeat_password:
+    messages.error(req, 'Las contraseñas no coinciden')
+    return
+  request.user.set_password(password)
+  request.user.save()
+  messages.success(req, 'Contraseña actualizaca correctamente')
+  
+  
 def obtener_inmuebles_comunas(filtro):
   if filtro is None:
     return Inmueble.objects.all().order_by('comuna')
@@ -128,10 +137,3 @@ def obtener_inmuebles_region(filtro):
   registros = cursor.fetchall() # LAZY LOADING
   return registros
 
-def cambiar_contraseña(req, password, repeat_password):
-  if password != repeat_password:
-    messages.error(req, 'Las contraseñas no coinciden')
-    return
-  request.user.set_password(password)
-  request.user.save()
-  messages.success(req, 'Contraseña actualizaca correctamente')

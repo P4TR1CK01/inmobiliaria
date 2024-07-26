@@ -2,6 +2,7 @@
 
 {% block content %}
 <div class="row">
+
   <div class="col-3">
     <h3 class="text-center">Cambia tu contraseña</h3>
     <form action="/accounts/change-pass" method="post">
@@ -18,6 +19,7 @@
       <input type="submit" value="Cambiar" class="btn btn-danger">
     </form>
   </div>
+
   <div class="col-5">
     <h3 class="text-center">Editar datos personales</h3>
     <form action="/edit-user/" method="post">
@@ -46,17 +48,9 @@
         <label for="" class="form-label">Teléfono</label>
         <input type="text" class="form-control" name="telefono" id="telefono" placeholder="tu teléfono"
           value="{% if user.usuario.telefono %}{{user.usuario.telefono}}{% endif %}" />
-        <div class="mb-3">
-          <!-- <b>{{user.usuario.rol}}</b> -->
-          <!-- <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="rol" id="arrendador" value="arrendador" required {% if user.usuario.rol == 'arrendador' %} checked {% endif %} />
-            <label class="form-check-label" for="arrendador">Arrendador</label>
-            <div class="form-check form-check-inline">
-              <input class="form-check-input" type="radio" name="rol" id="arrendatario" value="arrendatario" required {% if user.usuario.rol == 'arrendatario' %} checked {% endif %} />
-              <label class="form-check-label" for="arrendatario">Arrendatario</label>
-            </div>
-          </div> -->
-        </div>
+      </div>
+
+      <div>
 
         <select name="rol2" id="rol2">
           <option value>Elija su ROL</option>
@@ -66,10 +60,12 @@
         </select>
 
         <input type="submit" value="Enviar" class="btn btn-outline-success">
+      </div>
+
     </form>
   </div>
-  <div class="col-4">
 
+  <div class="col-4">
     <h3 class="text-center">
       {% if user.usuario.rol == 'arrendador' %}
       Tus propiedades
@@ -80,26 +76,27 @@
       {% endif %}
     </h3>
     <ul class="list-group">
-      {% for inmueble in mis_inmuebles %}
+      {% for inmueble in inmuebles %}
       <li class="list-group-item">
         <h5>{{ inmueble.nombre }}</h5>
         <div class="d-flex justify-content-between">
-          <span>${{ inmueble.precio }} por mes</span>
+          <span>${{ inmueble.precio_mensual_arriendo }} por mes</span>
 
           <a href="#" class="p-1">
             <i class="bi bi-pencil-fill"></i>
           </a>
-          <a href="{% url 'eliminar' %}" class="p-1 text-danger">
+          <a href="{% url 'eliminar_inmueble' id=inmueble.id %}" class="p-1 text-danger">
             <i class="bi bi-trash-fill"></i>
           </a>
-          <a href="#" class="p-1 text-danger" onclick="eliminar(event)">
+          <!-- <a href="#" class="p-1 text-danger" onclick="eliminar(event)">
             <i class="bi bi-trash-fill id='{{inmueble.id}}'"></i>
-          </a>
+          </a> -->
         </div>
       </li>
       {% endfor %}
     </ul>
   </div>
+
 </div>
 {% endblock %}
 
