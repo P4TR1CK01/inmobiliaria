@@ -18,8 +18,6 @@ def calcular_clase(tipo_mensaje):
     return 'danger'
   return tipo_mensaje
 
-
-
 @login_required
 def profile(req):
   usuario = req.user

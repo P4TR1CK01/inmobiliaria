@@ -133,3 +133,31 @@ Además, el inmueble debe tener las siguientes caracteristicas:
 	b. Listar propiedades en el dashboard.
 	c. Eliminar y editar sus propiedades.
 	d. Aceptar arrendatarios.
+
+----------------------------------------------
+	Hito 5 - Presentación del proyecto
+----------------------------------------------
+●
+Para realizar este desafío debes haber estudiado previamente todo el material disponible en el LMS correspondiente a la unidad, así como haber realizado exitosamente los hitos previos.
+●
+Desarrollo desafío: En parejas.
+Habilidades a evaluar
+●
+Acceso a datos en aplicaciones Django:
+○
+Construir aplicaciones web que manipulan datos en una base de datos SQL utilizando Python/Django y las componentes que el lenguaje dispone para su uso para dar solución a un requerimiento.
+●
+Expone el proyecto realizado y sus principales características
+●
+Demuestra el buen funcionamiento del proyecto realizado
+●
+Describe las problemáticas descubiertas en la realización del proyecto
+Descripción
+Llegó la hora de la verdad. Luego de los 4 hitos previos, pasamos de no tener nada a disponer de un sitio web que permite publicar y arrendar inmuebles disponibles para arriendo, separados por comuna y región, y que además funciona bien tanto en computadores como celulares. Como último hito deberás compartir tu presentación a los demás estudiantes, poniendo énfasis en los puntos señalados en el último requerimiento del Hito IV, los cuales son:
+●
+Descripción general del sitio web
+●
+Características base del sitio web
+●
+Problemas o dificultades con los que se encontraron a la hora de desarrollar el sitio web.
+Además de esto, se debe realizar una muestra del sitio web funcional, realizando tareas como agregar nuevos inmuebles a la lista de los arriendos ya disponibles, iniciar sesión con un usuario en específico, demostrar las funcionalidades de arriendo, filtros por comunas y regiones, entre otros.

@@ -1,120 +1,135 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 <div class="row">
-
-  <div class="col-3">
-    <h3 class="text-center">Cambia tu contraseña</h3>
-    <form action="/accounts/change-pass" method="post">
-      {% csrf_token %}
-      <div class="mb-3">
-        <label for="password" class="form-label">Contraseña</label>
-        <input type="password" class="form-control" name="password" id="password" placeholder="*****" required />
-      </div>
-
-      <div class="mb-3">
-        <label for="pass_repeat" class="form-label">Repita la contraseña</label>
-        <input type="password" class="form-control" name="pass_repeat" id="pass_repeat" placeholder="*****" required />
-      </div>
-      <input type="submit" value="Cambiar" class="btn btn-danger">
-    </form>
+  <div class="col-12 col-md-4 ">
+    <div class="alert
+    alert-{{ message.tags | calcular_clase }} 
+    alert-dismissible 
+    fade 
+    show" role="alert">
+      <strong>Bienvenido {{user.first_name}} {{user.last_name}} </strong> {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
   </div>
+</div>
+  <div class="row">
 
-  <div class="col-5">
-    <h3 class="text-center">Editar datos personales</h3>
-    <form action="/edit-user/" method="post">
-      {% csrf_token %}
-      <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" class="form-control" name="email" id="email" placeholder="abc@mail.com"
-          value="{{ user.email }}" required />
-      </div>
-      <div class="mb-3">
-        <label for="" class="form-label">Nombre</label>
-        <input type="text" class="form-control" name="first_name" id="first_name" placeholder="tu nombre"
-          value="{{user.first_name}}" required />
-      </div>
-      <div class="mb-3">
-        <label for="" class="form-label">Apellido</label>
-        <input type="text" class="form-control" name="last_name" id="last_name" placeholder="tu apellido"
-          value="{{user.last_name}}" required />
-      </div>
-      <div class="mb-3">
-        <label for="" class="form-label">Dirección</label>
-        <input type="text" class="form-control" name="direccion" id="direccion" placeholder="tu dirección"
-          value="{{user.usuario.direccion}}" required />
-      </div>
-      <div class="mb-3">
-        <label for="" class="form-label">Teléfono</label>
-        <input type="text" class="form-control" name="telefono" id="telefono" placeholder="tu teléfono"
-          value="{% if user.usuario.telefono %}{{user.usuario.telefono}}{% endif %}" />
-      </div>
+    <div class="col-3">
+      <h3 class="text-center">Cambia tu contraseña</h3>
+      <form action="/accounts/change-pass" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="password" class="form-label">Contraseña</label>
+          <input type="password" class="form-control" name="password" id="password" placeholder="*****" required />
+        </div>
 
-      <div>
+        <div class="mb-3">
+          <label for="pass_repeat" class="form-label">Repita la contraseña</label>
+          <input type="password" class="form-control" name="pass_repeat" id="pass_repeat" placeholder="*****"
+            required />
+        </div>
+        <input type="submit" value="Cambiar" class="btn btn-danger">
+      </form>
+    </div>
 
-        <select name="rol2" id="rol2">
-          <option value>Elija su ROL</option>
-          {% for rol in user.usuario.roles %}
-          <option {% if rol.0 == user.usuario.rol %}selected{% endif %} value="{{rol.0}}">{{rol.1}}</option>
-          {% endfor %}
-        </select>
+    <div class="col-5">
+      <h3 class="text-center">Editar datos personales</h3>
+      <form action="/edit-user/" method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" name="email" id="email" placeholder="abc@mail.com"
+            value="{{ user.email }}" required />
+        </div>
+        <div class="mb-3">
+          <label for="" class="form-label">Nombre</label>
+          <input type="text" class="form-control" name="first_name" id="first_name" placeholder="tu nombre"
+            value="{{user.first_name}}" required />
+        </div>
+        <div class="mb-3">
+          <label for="" class="form-label">Apellido</label>
+          <input type="text" class="form-control" name="last_name" id="last_name" placeholder="tu apellido"
+            value="{{user.last_name}}" required />
+        </div>
+        <div class="mb-3">
+          <label for="" class="form-label">Dirección</label>
+          <input type="text" class="form-control" name="direccion" id="direccion" placeholder="tu dirección"
+            value="{{user.usuario.direccion}}" required />
+        </div>
+        <div class="mb-3">
+          <label for="" class="form-label">Teléfono</label>
+          <input type="text" class="form-control" name="telefono" id="telefono" placeholder="tu teléfono"
+            value="{% if user.usuario.telefono %}{{user.usuario.telefono}}{% endif %}" />
+        </div>
 
-        <input type="submit" value="Enviar" class="btn btn-outline-success">
-      </div>
+        <div>
 
-    </form>
-  </div>
+          <select name="rol2" id="rol2">
+            <option value>Elija su ROL</option>
+            {% for rol in user.usuario.roles %}
+            <option {% if rol.0==user.usuario.rol %}selected{% endif %} value="{{rol.0}}">{{rol.1}}</option>
+            {% endfor %}
+          </select>
 
-  <div class="col-4">
-    <h3 class="text-center">
-      {% if user.usuario.rol == 'arrendador' %}
-      Tus propiedades
-      {% elif user.usuario.rol == 'arrendatario' %}
-      Propiedades Solicitadas
-      {% else %}
-      TODAS
-      {% endif %}
-    </h3>
-    <ul class="list-group">
-      {% for inmueble in inmuebles %}
-      <li class="list-group-item">
-        <h5>{{ inmueble.nombre }}</h5>
-        <div class="d-flex justify-content-between">
-          <span>${{ inmueble.precio_mensual_arriendo }} por mes</span>
+          <input type="submit" value="Enviar" class="btn btn-outline-success">
+        </div>
 
-          <a href="#" class="p-1">
-            <i class="bi bi-pencil-fill"></i>
-          </a>
-          <a href="{% url 'eliminar_inmueble' id=inmueble.id %}" class="p-1 text-danger">
-            <i class="bi bi-trash-fill"></i>
-          </a>
-          <!-- <a href="#" class="p-1 text-danger" onclick="eliminar(event)">
+      </form>
+    </div>
+
+    <div class="col-4">
+      <h3 class="text-center">
+        {% if user.usuario.rol == 'arrendador' %}
+        Tus propiedades
+        {% elif user.usuario.rol == 'arrendatario' %}
+        Propiedades Solicitadas
+        {% else %}
+        TODAS
+        {% endif %}
+      </h3>
+      <ul class="list-group">
+        {% for inmueble in inmuebles %}
+        <li class="list-group-item">
+          <h5>{{ inmueble.nombre }}</h5>
+          <div class="d-flex justify-content-between">
+            <span>${{ inmueble.precio_mensual_arriendo }} por mes</span>
+
+            <a href="#" class="p-1">
+              <i class="bi bi-pencil-fill"></i>
+            </a>
+            <a href="{% url 'eliminar_inmueble' id=inmueble.id %}" class="p-1 text-danger">
+              <i class="bi bi-trash-fill"></i>
+            </a>
+            <!-- <a href="#" class="p-1 text-danger" onclick="eliminar(event)">
             <i class="bi bi-trash-fill id='{{inmueble.id}}'"></i>
           </a> -->
-        </div>
-      </li>
-      {% endfor %}
-    </ul>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
   </div>
 
-</div>
-{% endblock %}
+  {% endblock %}
 
-{% block js %}
-<script>
-  function eliminar(event) {
-    //evitamos que el enlace me dirija a otro lado
-    event.preventDefault()
-    //recuperamos el HREF del enlace clickeado
-    const id = event.target.id
-    const url = '/inmuebles/eliminar/' + id + '/'
-    //confirmamos si desea eliminar
-    console.log('eliminando propiedad' + url)
-    const confirmacion = confirm('¿esta seguro de eliminar este item?')
-    if (confirmacion == True) {
-      // redirijo la pagina a la url construida
-      window.location.href = url
+  {% block js %}
+  <script>
+    function eliminar(event) {
+      //evitamos que el enlace me dirija a otro lado
+      event.preventDefault()
+      //recuperamos el HREF del enlace clickeado
+      const id = event.target.id
+      const url = '/inmuebles/eliminar/' + id + '/'
+      //confirmamos si desea eliminar
+      console.log('eliminando propiedad' + url)
+      const confirmacion = confirm('¿esta seguro de eliminar este item?')
+      if (confirmacion == True) {
+        // redirijo la pagina a la url construida
+        window.location.href = url
+      }
     }
-  }
-</script>
-{% endblock %}
+  </script>
+  {% endblock %}
