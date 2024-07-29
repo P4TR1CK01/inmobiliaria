@@ -45,7 +45,7 @@ def eliminar_inmueble(inmueble_id):
   inmueble = Inmueble.objects.get(id=inmueble_id)
   inmueble.delete()
 
-def crear_user(username, first_name, last_name, email, password, pass_confirm, direccion, telefono=None):
+def crear_user(req, username, first_name, last_name, email, password, pass_confirm, direccion, rol, telefono=None):
   if password != pass_confirm:
     messages.error(req, 'Las contraseñas no coinciden')
     return False
@@ -60,21 +60,21 @@ def crear_user(username, first_name, last_name, email, password, pass_confirm, d
     )
   except IntegrityError:
     # Se le da feedback al usuario
-    messages.error(req, 'Este RUT ya está en uso, porfavor ingrese otro') 
+    messages.warning(req, 'Este RUT ya está en uso, porfavor ingrese otro') 
     return False
   except ValidationError:
-    messages.error(req, 'Este E-mail ya está en uso, porafvor ingrese otro')
+    messages.warning(req, 'Este E-mail ya está en uso, porfavor ingrese otro')
     return False
     
   # Creamos el UserProfile
   UserProfile.objects.create(
     user = user, 
     direccion = direccion, 
-    telefono = telefono,
+    telefono_personal = telefono,
     rol = rol)
   # Si todo sale bien, retornamos True
   messages.success(req, 'Su usuario ha sido creado')
-  return True, None
+  return True
 
 def editar_user(username, first_name, last_name, email, password, direccion, telefono=None):
   # Nos traemos el 'user' y modificamos sus datos
@@ -87,7 +87,7 @@ def editar_user(username, first_name, last_name, email, password, direccion, tel
   # Nos traemos el 'user_profile' y modificamos sus datos
   user_profile = UserProfile.objects.get(user=user)
   user_profile.direccion = direccion
-  user_profile.telefono = telefono
+  user_profile.telefono_personal = telefono
   user_profile.save()
 
 def editar_user_sin_password(username, first_name, last_name, email, direccion, rol,  telefono=None):
@@ -100,7 +100,7 @@ def editar_user_sin_password(username, first_name, last_name, email, direccion, 
   # Nos traemos el 'user_profile' y modificamos sus datos
   user_profile = UserProfile.objects.get(user=user)
   user_profile.direccion = direccion
-  user_profile.telefono = telefono
+  user_profile.telefono_personal = telefono
   user_profile.rol = rol
   user_profile.save()
   

@@ -3,9 +3,8 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib import messages
 from django.db.models import Q
-from main.services import editar_user, editar_user_sin_password, eliminar_user, cambiar_contraseña
+from main.services import crear_user, editar_user, editar_user_sin_password, eliminar_user, cambiar_contraseña, crear_inmueble as crear_inmueble_service, eliminar_inmueble as eliminar_inmueble_service, crear_inmueble, editar_inmueble, eliminar_inmueble
 from main.models import Inmueble, Region, Comuna
-from main.services import crear_inmueble as crear_inmueble_service, eliminar_inmueble as eliminar_inmueble_service, crear_inmueble, editar_inmueble, eliminar_inmueble
 #from main.forms import InmuebleForm
 
 # Create your views here.
@@ -28,19 +27,19 @@ def home(req):
 
 # Filtros de busqueda en pagina de inicio-->
 def filtrar_inmuebles(region_cod, comuna_cod, palabra):
-  # Caso 1.1-2-3
+  # Filtra inmuebles según la región, comuna y palabra clave
   filtro_palabra = None 
   if palabra != '':
     filtro_palabra = Q(nombre__icontains=palabra) | Q(descripcion__icontains=palabra)
+  
   filtro_ubicacion = None
   if comuna_cod != '':
-    comuna = Comuna.objects.get(cod = comuna_cod)
+    comuna = Comuna.objects.get(cod=comuna_cod)
     filtro_ubicacion = Q(comuna=comuna)
   elif region_cod != '':
-    region = Region.objects.get(cod = region_cod)
+    region = Region.objects.get(cod=region_cod)
     comunas_region = region.comunas.all()
-    filtro_ubicacion = Q(comuna__in = comunas_region)
-    # Caso 2.1-2-3
+    filtro_ubicacion = Q(comuna__in=comunas_region)
   if filtro_ubicacion is None and filtro_palabra is None:
     return Inmueble.objects.all()
   elif filtro_ubicacion is not None and filtro_palabra is None:
@@ -51,7 +50,20 @@ def filtrar_inmuebles(region_cod, comuna_cod, palabra):
     return Inmueble.objects.filter(filtro_palabra & filtro_ubicacion)
 
 def register(req):
-  return render(req, 'registration/register.html')
+  if req.method == 'POST':
+    username = req.POST['username']
+    first_name = req.POST['first_name']
+    last_name = req.POST['last_name']
+    email = req.POST['email']
+    direccion = req.POST['direccion']
+    telefono = req.POST['telefono']
+    rol = req.POST['rol']
+    password = req.POST['password']
+    password_confirm = req.POST['password_confirm']
+    crear_user(req, username, first_name, last_name, email, password, password_confirm, direccion, rol, telefono=None)
+    return redirect('login')
+  else:
+    return render(req, 'registration/register.html')
 
 def about(req):
     return render(req, 'about.html')
@@ -107,14 +119,17 @@ def change_password(req):
   return redirect('/accounts/profile')
 
 def solo_arrendadores(user):
-  user.usuario.rol == 'arrendador'
+    # Comprueba si el usuario es un arrendador
+    if user.groups.filter(name='arrendadores').exists():
+        return True
+    return False
 
 def solo_arrendatarios(req):
-  return HttpResponse('sólo arrendatarios')
+  return HttpResponse('solo arrendatarios')
 
 # Inmuebles -->
 
-@user_passes_test(solo_arrendadores)
+@login_required
 def nuevo_inmueble(req):
   # Nos traemos la informacion de las comunas y las regiones
   regiones = Region.objects.all()
@@ -127,10 +142,11 @@ def nuevo_inmueble(req):
   }
   return render(req, 'nuevo_inmueble.html', context)
 
+
 @user_passes_test(solo_arrendadores)
 def crear_inmueble(req):
   # Obtener el rut del usuario
-  print(req.POST)
+  propietario_rut = req.user.username
   # Agregamos el inmueble a la DataBase
   crear_inmueble_service(
     req.POST['nombre'],
@@ -147,50 +163,49 @@ def crear_inmueble(req):
     propietario_rut
   )
   messages.success(req, 'Propiedad Creada')
-  return redirect('/accounts/profile/')
+  return redirect('/accounts/nuevo_inmueble/')
 
 @user_passes_test(solo_arrendadores)
 def editar_inmueble(req, id):
-  if req.method == 'GET':
-    # Obtengo el inmueble a editar
-    inmueble = Inmueble.objects.get(id=id)
-    # Obtengo las regiones y comunas
-    regiones = Region.objects.all()
-    comunas = Comuna.objects.all()
-    # Obtengo el código de la region
-    # cod_region = inmueble.comuna.region.cod
-    cod_region_actual = inmueble.comuna_id[0:2]
-    # Creo el 'context' con toda la info que requiere el template
-    context = {
-      'inmueble': inmueble,
-      'regiones': regiones,
-      'comunas': comunas, 
-      'cod_region': cod_region_actual,
-    }
-    return render(req, 'editar_inmueble.html', context)
-  else:
-    propietario_rut = req.user.username
-    editar_inmueble(
-      id,
-      req.POST['nombre'],
-      req.POST['descripcion'],
-      int(req.POST['m2_construidos']),
-      int(req.POST['m2_totales']),
-      int(req.POST['num_estacionamientos']),
-      int(req.POST['num_habitaciones']),
-      int(req.POST['num_baños']),
-      req.POST['direccion'],
-      req.POST['tipo_inmueble'],
-      int(req.POST['precio']),
-      req.POST['comuna_cod'],
-      propietario_rut
-    )
-    messages.success(req, 'Cambios guardados')
-    return redirect('/accounts/profile/')
+    if req.method == 'GET':
+        # Obtengo el inmueble a editar
+        inmueble = Inmueble.objects.get(id=id)
+        # Obtengo las regiones y comunas
+        regiones = Region.objects.all()
+        comunas = Comuna.objects.all()
+        # Obtengo el código de la region
+        cod_region_actual = inmueble.comuna_id[0:2]
+        # Creo el 'context' con toda la info que requiere el template
+        context = {
+            'inmueble': inmueble,
+            'regiones': regiones,
+            'comunas': comunas,
+            'cod_region': cod_region_actual,
+        }
+        return render(req, 'editar_inmueble.html', context)
+    else:
+        propietario_rut = req.user.username
+        editar_inmueble_service(
+            id,
+            req.POST.get('nombre'),
+            req.POST.get('descripcion'),
+            int(req.POST.get('m2_construidos')),
+            int(req.POST.get('m2_totales')),
+            int(req.POST.get('num_estacionamientos')),
+            int(req.POST.get('num_habitaciones')),
+            int(req.POST.get('num_baños')),
+            req.POST.get('direccion'),
+            req.POST.get('tipo_inmueble'),
+            int(req.POST.get('precio')),
+            req.POST.get('comuna_cod'),
+            propietario_rut
+        )
+        messages.success(req, 'Cambios guardados')
+        return redirect('/accounts/profile/')
 
 @user_passes_test(solo_arrendadores)
 def eliminar_inmueble(req, id):
   eliminar_inmueble_service(id)
   messages.error(req, 'Inmueble eliminado')
-  return redirect('/account/profile/')
+  return redirect('/accounts/profile/')
 

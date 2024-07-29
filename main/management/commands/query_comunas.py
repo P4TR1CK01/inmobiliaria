@@ -7,7 +7,7 @@ class Command(BaseCommand):
     # Argumentos posicionales
     parser.add_argument('-f', '--f', type=str, nargs='+')
   def handle(self, *args, **kwargs):
-    file = open('data/inmuebles_comuna.txt', 'w',encoding='utf-8')
+    file = open('data/inmuebles_comuna.txt', 'w', encoding='utf-8')
     filtro = None
     if 'f' in kwargs.keys() and kwargs['f'] is not None:
       filtro = kwargs['f'][0]
