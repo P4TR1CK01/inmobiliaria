@@ -43,24 +43,26 @@
 
     </form>
 
-    </form>
   </div>
-  <div class="col-8 ">
-    {% for inmueble in inmuebles %}
-    <div class="card mt-3">
-      <div class="card-body">
-        <div class="row">
-          <div class="col-8">
-            <h5 class="card-title">{{ inmueble.nombre }}</h5>
-            <p class="card-text">{{ inmueble.descripcion }}</p>
-          </div>
-          <div class="col-4">
-            <a href="#" class="btn btn-primary">Ver inmueble</a>
+  <div class="row">
+    <div class="col-8 ">
+      {% for inmueble in inmuebles %}
+      <div class="card mt-3">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-8">
+              <h5 class="card-title">{{ inmueble.nombre }}</h5>
+              <p class="card-text">{{ inmueble.descripcion }}</p>
+              <p class="card-text">{{ inmueble.comuna.nombre }}</p>
+            </div>
+            <div class="col-4">
+              <a href="#" class="btn btn-primary">Ver inmueble</a>
+            </div>
           </div>
         </div>
       </div>
+      {% endfor %}
     </div>
-    {% endfor %}
   </div>
 </div>
 {% endblock %}

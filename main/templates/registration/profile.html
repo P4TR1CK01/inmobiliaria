@@ -4,7 +4,7 @@
 
   <div class="row">
 
-    <div class="col-3">
+    <div class="col-3 mt-3">
       <h3 class="text-center">Cambia tu contraseña</h3>
       <form action="/accounts/change-pass" method="post">
         {% csrf_token %}
@@ -18,7 +18,15 @@
           <input type="password" class="form-control" name="pass_repeat" id="pass_repeat" placeholder="*****"
             required />
         </div>
-        <input type="submit" value="Cambiar" class="btn btn-danger">
+      </form>
+      <form action="" class="d-flex justify-content-center">
+        <input type="submit" value="Cambiar contraseña" class="btn btn-danger">
+      </form>
+
+      <h3 class="text-center mt-3">Eliminar usuario</h3>
+      <form action="/delete-user/" method="post" class="d-flex justify-content-center">
+        {% csrf_token %}
+        <input type="submit" value="Eliminar" class="btn btn-danger">
       </form>
     </div>
 
@@ -51,23 +59,19 @@
           <input type="text" class="form-control" name="telefono" id="telefono" placeholder="tu teléfono"
             value="{% if user.usuario.telefono %}{{user.usuario.telefono}}{% endif %}" />
         </div>
-
         <div>
-
-          <select name="rol2" id="rol2">
+          <select name="rol" id="rol">
             <option value>Elija su ROL</option>
             {% for rol in user.usuario.roles %}
             <option {% if rol.0 == user.usuario.rol %}selected{% endif %} value="{{rol.0}}">{{rol.1}}</option>
             {% endfor %}
           </select>
-
           <input type="submit" value="Enviar" class="btn btn-outline-success">
         </div>
-
       </form>
     </div>
 
-    <div class="col-4">
+    <div class="col-3">
       <h3 class="text-center">
         {% if user.usuario.rol == 'arrendador' %}
         Tus propiedades

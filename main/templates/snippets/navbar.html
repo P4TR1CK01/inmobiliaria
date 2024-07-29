@@ -36,10 +36,10 @@
           <a class="nav-link dropdown-toggle boton-arriendo" href="/" role="button" data-bs-toggle="dropdown"
             aria-expanded="false">Tipo de propiedad</a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/inmuebles/bodegas/">Bodegas</a></li>
-            <li><a class="dropdown-item" href="/inmuebles/casas/">Casas</a></li>
-            <li><a class="dropdown-item" href="/inmuebles/departamentos/">Departametos</a></li>
-            <li><a class="dropdown-item" href="/inmuebles/parcelas/">Parcelas</a></li>
+            <li><a class="dropdown-item" href="{% url 'bodegas' %}">Bodegas</a></li>
+            <li><a class="dropdown-item" href="{% url 'casas' %}">Casas</a></li>
+            <li><a class="dropdown-item" href="{% url 'departamentos' %}">Departametos</a></li>
+            <li><a class="dropdown-item" href="{% url 'parcelas' %}">Parcelas</a></li>
           </ul>
         </li>
           {% if user.user_profile.rol == 'arrendador' or user.is_admin %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="row">
+  <div class="col-8 offset-2">
+    <div class="card mt-3">
+      <img src="" class="img-fluids ms-2" alt="">
+      <div class="card-body">
+        <h5 class="card-title">{{ inmueble.nombre }}</h5>
+        <p class="card-text">{{ inmueble.descripcion }}</p>
+        <p class="card-text">{{ inmueble.precio_mensual_arriendo }}</p>
+        <a href="/inmueble/detalle/{{inmueble.id}}">Detalles del inmueble</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

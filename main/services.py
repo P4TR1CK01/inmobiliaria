@@ -76,19 +76,19 @@ def crear_user(req, username, first_name, last_name, email, password, pass_confi
   messages.success(req, 'Su usuario ha sido creado')
   return True
 
-def editar_user(username, first_name, last_name, email, password, direccion, telefono=None):
-  # Nos traemos el 'user' y modificamos sus datos
-  user = User.objects.get(username=username)
-  user.first_name = first_name
-  user.last_name = last_name
-  user.email = email
-  user.set_password(password)
-  user.save()
-  # Nos traemos el 'user_profile' y modificamos sus datos
-  user_profile = UserProfile.objects.get(user=user)
-  user_profile.direccion = direccion
-  user_profile.telefono_personal = telefono
-  user_profile.save()
+# def editar_user(username, first_name, last_name, email, password, direccion, telefono=None):
+#   # Nos traemos el 'user' y modificamos sus datos
+#   user = User.objects.get(username=username)
+#   user.first_name = first_name
+#   user.last_name = last_name
+#   user.email = email
+#   user.set_password(password)
+#   user.save()
+#   # Nos traemos el 'user_profile' y modificamos sus datos
+#   user_profile = UserProfile.objects.get(user=user)
+#   user_profile.direccion = direccion
+#   user_profile.telefono_personal = telefono
+#   user_profile.save()
 
 def editar_user_sin_password(username, first_name, last_name, email, direccion, rol,  telefono=None):
   # Nos traemos el 'user' y modificamos sus datos
@@ -105,15 +105,15 @@ def editar_user_sin_password(username, first_name, last_name, email, direccion, 
   user_profile.save()
   
 def eliminar_user(rut):
-  eliminar = User.objects.get(Usernname = rut)
+  eliminar = User.objects.get(username = rut)
   eliminar.delete()
   
 def cambiar_contraseña(req, password, repeat_password):
   if password != repeat_password:
     messages.error(req, 'Las contraseñas no coinciden')
     return
-  request.user.set_password(password)
-  request.user.save()
+  req.user.set_password(password)
+  req.user.save()
   messages.success(req, 'Contraseña actualizaca correctamente')
   
 def obtener_inmuebles_comunas(filtro):

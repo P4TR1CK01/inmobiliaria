@@ -2,7 +2,7 @@
 
 {% block content %}
   <h3 class="text-center">Crear una nueva propiedad</h3>
-  <form action="/inmuebles/crear/" method="post">
+  <form action="{% url 'crear_inmueble' %}" method="post">
     {% csrf_token %}
 
     <div class="row">

@@ -1,9 +1,10 @@
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import user_passes_test, login_required
+from django.contrib.auth.models import User
 from django.contrib import messages
 from django.db.models import Q
-from main.services import crear_user, editar_user, editar_user_sin_password, eliminar_user, cambiar_contraseña, crear_inmueble as crear_inmueble_service, eliminar_inmueble as eliminar_inmueble_service, crear_inmueble, editar_inmueble, eliminar_inmueble
+from main.services import crear_user, editar_user_sin_password, eliminar_user, cambiar_contraseña, crear_inmueble as crear_inmueble_service, eliminar_inmueble as eliminar_inmueble_service
 from main.models import Inmueble, Region, Comuna
 #from main.forms import InmuebleForm
 
@@ -65,9 +66,6 @@ def register(req):
   else:
     return render(req, 'registration/register.html')
 
-def about(req):
-    return render(req, 'about.html')
-
 @login_required
 def profile(req):
   usuario = req.user
@@ -75,47 +73,74 @@ def profile(req):
   context = {
     'inmuebles': inmuebles
   }
+  if req.method == 'POST':
+    if req.POST['telefono'].strip() != '':
+      username = req.POST['username']
+      first_name = req.POST['first_name']
+      last_name = req.POST['last_name']
+      email = req.POST['email']
+      direccion = req.POST['direccion']
+      telefono = req.POST['telefono']
+      rol = req.POST['rol']
+    else:
+      username = req.user
+      first_name = req.user.first_name
+      last_name = req.POST['last_name']
+      email = req.POST['email']
+      direccion = req.POST['direccion']
+      rol = req.POST['rol']
+      messages.success(req, 'Datos actualizados correctamente')
+      return redirect('/accounts/profile')
   return render(req, 'registration/profile.html', context)
 
 @login_required
 def edit_user(req):
-  # Obtengo el usuario actual
-  current_user = req.user
-  # llamo a la función para editar el usuario
-  if req.POST['telefono'].strip() != '':
-    # trailing whitespaces .strip()
-    editar_user_sin_password(
-      current_user.username,
-      req.POST['first_name'],
-      req.POST['last_name'],
-      req.POST['email'],
-      req.POST['direccion'],
-      req.POST['rol'],
-      req.POST['telefono'])
+
+  if req.method == 'POST':
+    try:
+      if req.POST['telefono'].strip() != '':
+        # trailing whitespaces .strip()
+          username = req.user
+          first_name = req.POST['first_name']
+          last_name = req.POST['last_name']
+          email = req.POST['email']
+          direccion = req.POST['direccion']
+          rol = req.POST['rol']
+          telefono = req.POST['telefono']
+          editar_user_sin_password(username, first_name, last_name, email, direccion, rol, telefono)
+          messages.success(req,'Datos actualizados')
+          return redirect('/accounts/profile')
+
+      else:
+        username = req.user
+        first_name = req.POST['first_name']
+        last_name = req.POST['last_name']
+        email = req.POST['email']
+        direccion = req.POST['direccion']
+        rol = req.POST['rol']
+        editar_user_sin_password(username, first_name, last_name, email, direccion, rol)
+        messages.success(req,'Datos actualizados')
+        return redirect('/accounts/profile')
+
+    except Exception as e:
+      messages.error(req, "Error al actualizar tus datos: {}".format(e))
+    return redirect('/')
   else:
-    editar_user_sin_password(
-      current_user.username,
-      req.POST['first_name'],
-      req.POST['last_name'],
-      req.POST['email'],
-      req.POST['direccion'],
-      req.POST['rol'])
-  messages.success(req, "Sus datos han sido actualizados")
-  return redirect('/')
+    return render(req, 'profile.html')
+
+@login_required
+def delete_user(req):
+  rut = req.user.username
+  print (rut)
+  eliminar_user(rut)
+  messages.success(req, 'Usuario eliminado')
+  return redirect('/accounts/profile')
 
 def change_password(req):
   # Recibo los datos del formulrio
   password = req.POST['password']
   pass_repeat = req.POST['pass_repeat']
-  # Valido que ambas contraseñas coincidan
-  if password != pass_repeat:
-    messages.danger(req, 'Las contraseñas no coinciden')
-    return redirect('/accounts/profile')
-  # Actualizamos la contraseña
-  req.user.set_password(password)
-  req.user.save()
-  # Le avisamos al usuario que el cambio fue exitoso
-  messages.success(req, "Contraseña actualizada")
+  cambiar_contraseña(req, password, pass_repeat)
   return redirect('/accounts/profile')
 
 def solo_arrendadores(user):
@@ -124,7 +149,9 @@ def solo_arrendadores(user):
         return True
     return False
 
-def solo_arrendatarios(req):
+def solo_arrendatarios(user):
+  if user.groups.filter(name='arrendatarios').exist():
+    return True
   return HttpResponse('solo arrendatarios')
 
 # Inmuebles -->
@@ -141,7 +168,6 @@ def nuevo_inmueble(req):
     'comunas': comunas
   }
   return render(req, 'nuevo_inmueble.html', context)
-
 
 @user_passes_test(solo_arrendadores)
 def crear_inmueble(req):
@@ -162,46 +188,46 @@ def crear_inmueble(req):
     req.POST['comuna_cod'],
     propietario_rut
   )
-  messages.success(req, 'Propiedad Creada')
-  return redirect('/accounts/nuevo_inmueble/')
+  messages.success( 'Propiedad Creada')
+  return redirect('/')
 
 @user_passes_test(solo_arrendadores)
 def editar_inmueble(req, id):
-    if req.method == 'GET':
-        # Obtengo el inmueble a editar
-        inmueble = Inmueble.objects.get(id=id)
-        # Obtengo las regiones y comunas
-        regiones = Region.objects.all()
-        comunas = Comuna.objects.all()
-        # Obtengo el código de la region
-        cod_region_actual = inmueble.comuna_id[0:2]
-        # Creo el 'context' con toda la info que requiere el template
-        context = {
-            'inmueble': inmueble,
-            'regiones': regiones,
-            'comunas': comunas,
-            'cod_region': cod_region_actual,
-        }
-        return render(req, 'editar_inmueble.html', context)
-    else:
-        propietario_rut = req.user.username
-        editar_inmueble_service(
-            id,
-            req.POST.get('nombre'),
-            req.POST.get('descripcion'),
-            int(req.POST.get('m2_construidos')),
-            int(req.POST.get('m2_totales')),
-            int(req.POST.get('num_estacionamientos')),
-            int(req.POST.get('num_habitaciones')),
-            int(req.POST.get('num_baños')),
-            req.POST.get('direccion'),
-            req.POST.get('tipo_inmueble'),
-            int(req.POST.get('precio')),
-            req.POST.get('comuna_cod'),
-            propietario_rut
-        )
-        messages.success(req, 'Cambios guardados')
-        return redirect('/accounts/profile/')
+  if req.method == 'GET':
+    # Obtengo el inmueble a editar
+    inmueble = Inmueble.objects.get(id=id)
+    # Obtengo las regiones y comunas
+    regiones = Region.objects.all()
+    comunas = Comuna.objects.all()
+    # Obtengo el código de la region
+    cod_region_actual = inmueble.comuna.region.cod
+    # Creo el 'context' con toda la info que requiere el template
+    context = {
+      'inmueble': inmueble,
+      'regiones': regiones,
+      'comunas': comunas,
+      'cod_region': cod_region,
+    }
+    return render(req, 'editar_inmueble.html', context)
+  else:
+    propietario_rut = req.user.username
+    editar_inmueble_service(
+      id,
+      req.POST.get('nombre'),
+      req.POST.get('descripcion'),
+      int(req.POST.get('m2_construidos')),
+      int(req.POST.get('m2_totales')),
+      int(req.POST.get('num_estacionamientos')),
+      int(req.POST.get('num_habitaciones')),
+      int(req.POST.get('num_baños')),
+      req.POST.get('direccion'),
+      req.POST.get('tipo_inmueble'),
+      int(req.POST.get('precio')),
+      req.POST.get('comuna_cod'),
+      propietario_rut
+    )
+    messages.success(req, 'Cambios guardados')
+    return redirect('/')
 
 @user_passes_test(solo_arrendadores)
 def eliminar_inmueble(req, id):
@@ -209,3 +235,26 @@ def eliminar_inmueble(req, id):
   messages.error(req, 'Inmueble eliminado')
   return redirect('/accounts/profile/')
 
+@login_required
+def detalle_inmueble(req, id):
+  id = int(id)
+  inmueble_encontrado = Inmueble.objects.get(id=id)
+  context = {
+    'inmueble': inmueble_encontrado,
+  }
+  return render(req, 'detalle_inmueble.html')
+
+def bodegas(req):
+    return render(req, 'bodegas.html')
+  
+def casas(req):
+    return render(req, 'casas.html')
+  
+def departamentos(req):
+    return render(req, 'departamentos.html')
+  
+def parcelas(req):
+    return render(req, 'parcelas.html')
+
+def about(req):
+    return render(req, 'about.html')
